@@ -211,10 +211,16 @@ export function HomeView({ locale }: { locale: Locale }) {
         </div>
         <RevealGroup className="mt-14 grid grid-cols-2 gap-3 px-3 md:grid-cols-3 md:gap-4 md:px-4">
           {galleryTeaser.map((item, i) => (
+            // Fixed ratios, because letting each photo set its own row height
+            // meant a single portrait shot stretched the whole row it landed in.
+            // The featured tile fills the two rows it spans, which works out to
+            // roughly the same 4:3 as its neighbours.
             <RevealItem
               key={item.src}
               className={
-                i === 0 ? "col-span-2 md:col-span-1 md:row-span-2" : ""
+                i === 0
+                  ? "col-span-2 aspect-3/2 md:row-span-2 md:aspect-auto"
+                  : "aspect-4/3"
               }
             >
               <Link
@@ -226,7 +232,11 @@ export function HomeView({ locale }: { locale: Locale }) {
                   alt={item.alt[locale]}
                   width={item.width}
                   height={item.height}
-                  sizes="(min-width: 768px) 33vw, 50vw"
+                  sizes={
+                    i === 0
+                      ? "(min-width: 768px) 66vw, 100vw"
+                      : "(min-width: 768px) 33vw, 50vw"
+                  }
                   placeholder="blur"
                   blurDataURL={item.blurDataURL}
                   className="size-full object-cover transition-transform duration-[0.9s] ease-[var(--ease-out-expo)] group-hover:scale-[1.05]"

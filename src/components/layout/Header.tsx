@@ -39,7 +39,16 @@ export function Header({ locale, dict }: { locale: Locale; dict: Dictionary }) {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
+    // The listener fires on every scroll frame, so it must not touch React
+    // unless the answer actually changed — `setScrolled` with an unchanged
+    // value still costs a render pass before React bails out.
+    let last = false;
+    const onScroll = () => {
+      const next = window.scrollY > 24;
+      if (next === last) return;
+      last = next;
+      setScrolled(next);
+    };
     window.addEventListener("scroll", onScroll, { passive: true });
     // Read the initial position on the next frame rather than during the
     // effect body, so the first paint is not forced into a second render.
@@ -71,9 +80,13 @@ export function Header({ locale, dict }: { locale: Locale; dict: Dictionary }) {
     <>
       <header
         className={cn(
-          "fixed inset-x-0 top-0 z-50 transition-[background-color,backdrop-filter,border-color] duration-500",
+          // backdrop-filter is deliberately left out of the transition: blurring
+          // the strip behind a full-width fixed bar is already the most
+          // expensive thing on the page, and animating its radius for half a
+          // second made every scroll that crossed the threshold drop frames.
+          "fixed inset-x-0 top-0 z-50 transform-gpu transition-[background-color,border-color] duration-500",
           scrolled || open
-            ? "border-b border-bone/10 bg-ink/85 backdrop-blur-xl"
+            ? "border-b border-bone/10 bg-ink/85 backdrop-blur-md"
             : "border-b border-transparent bg-transparent",
         )}
       >

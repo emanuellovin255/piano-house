@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import Lenis from "lenis";
+import { frame, cancelFrame } from "motion/react";
 import { usePathname } from "next/navigation";
 
 /**
@@ -19,21 +20,21 @@ export function SmoothScroll() {
     const coarse = window.matchMedia("(pointer: coarse)").matches;
     if (reduced || coarse) return;
 
-    const lenis = new Lenis({
-      duration: 1.1,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      wheelMultiplier: 0.9,
-    });
+    // Interpolating toward the target (rather than easing a fixed duration per
+    // wheel event) keeps the step size constant regardless of refresh rate, so
+    // a 120 Hz display no longer arrives in visible chunks.
+    const lenis = new Lenis({ lerp: 0.12, wheelMultiplier: 1 });
 
-    let frame = 0;
-    const raf = (time: number) => {
-      lenis.raf(time);
-      frame = requestAnimationFrame(raf);
-    };
-    frame = requestAnimationFrame(raf);
+    // Lenis has to run inside Motion's frame loop, not its own rAF. With two
+    // loops, `useScroll` reads the scroll position from the frame *before*
+    // Lenis moved it, and every scroll-linked transform trails the page by one
+    // frame — the stutter you see on the hero and the parallax panels.
+    const update = ({ timestamp }: { timestamp: number }) =>
+      lenis.raf(timestamp);
+    frame.update(update, true);
 
     return () => {
-      cancelAnimationFrame(frame);
+      cancelFrame(update);
       lenis.destroy();
     };
   }, []);

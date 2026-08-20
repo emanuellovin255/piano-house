@@ -36,10 +36,14 @@ export function Hero({
     offset: ["start start", "end start"],
   });
 
-  const mediaScale = useTransform(
+  // Deliberately a translation and not a scale. Scaling this layer meant Chrome
+  // re-rasterised a full-viewport photo on every scroll frame — on top of the
+  // Ken Burns animation already scaling the same image — which is what made the
+  // hero flicker. Translating composites the existing texture instead.
+  const mediaY = useTransform(
     scrollYProgress,
     [0, 1],
-    reduced ? [1, 1] : [1, 1.12],
+    reduced ? ["0%", "0%"] : ["0%", "9%"],
   );
   const mediaOpacity = useTransform(
     scrollYProgress,
@@ -58,9 +62,11 @@ export function Hero({
       ref={ref}
       className="relative flex min-h-[100svh] flex-col justify-end overflow-hidden pt-28 pb-14 md:pb-20"
     >
+      {/* Overhangs the section top and bottom so the parallax drift never
+          exposes an edge as the hero scrolls away. */}
       <motion.div
-        style={{ scale: mediaScale, opacity: mediaOpacity }}
-        className="absolute inset-0"
+        style={{ y: mediaY, opacity: mediaOpacity }}
+        className="absolute inset-x-0 -top-[10%] h-[120%] transform-gpu will-change-[transform,opacity]"
       >
         <HeroMedia slides={slides} />
       </motion.div>

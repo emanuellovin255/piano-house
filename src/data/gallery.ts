@@ -137,23 +137,29 @@ const pick = (src: string) => galleryItems.find((i) => i.src === src)!;
 /**
  * Hero fallback slides, shown until the client's video files land — and kept
  * afterwards for reduced-motion and data-saver visitors. Chosen for variety:
- * living room, bedroom, courtyard, detail.
+ * living room, bedroom, courtyard.
  */
 export const heroSlides: MediaImage[] = [
   pick("/media/gallery/img_5248.jpg"),
   pick("/media/gallery/img_5275hdr.jpg"),
   pick("/media/new/img_5059.jpg"),
-  pick("/media/gallery/img_5243.jpg"),
 ];
 
-/** A handful of strong shots for the homepage gallery teaser. */
+/**
+ * A handful of strong shots for the homepage gallery teaser. The first entry
+ * is the featured tile — it runs two columns wide and two rows tall on
+ * desktop, so the count here should stay at nine to fill the grid exactly.
+ */
 export const galleryTeaser: GalleryItem[] = [
-  pick("/media/gallery/img_5231.jpg"),
-  pick("/media/gallery/img_5276.jpg"),
-  pick("/media/new/img_5056.jpg"),
+  pick("/media/gallery/img_5224.jpg"),
+  pick("/media/gallery/img_5275hdr.jpg"),
+  pick("/media/gallery/img_5233.jpg"),
   pick("/media/gallery/img_5230.jpg"),
   pick("/media/gallery/img_5261.jpg"),
-  pick("/media/gallery/img_5241.jpg"),
+  pick("/media/gallery/img_5253.jpg"),
+  pick("/media/gallery/img_5271.jpg"),
+  pick("/media/gallery/img_5276.jpg"),
+  pick("/media/new/img_5056.jpg"),
 ];
 
 /** The illuminated house sign at night. */
