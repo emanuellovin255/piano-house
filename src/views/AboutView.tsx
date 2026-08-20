@@ -45,7 +45,7 @@ const courtyard = {
 
 export function AboutView({ locale }: { locale: Locale }) {
   const dict = getDictionary(locale);
-  // Portrait originals, so the 3:4 parallax frames crop nothing important.
+  // Portrait originals — the frames are 2:3 to match them exactly.
   const portraitOne = media.gallery.find((p) =>
     p.src.endsWith("img_5252.jpg"),
   )!;
@@ -88,7 +88,7 @@ export function AboutView({ locale }: { locale: Locale }) {
 
           <div className="lg:col-span-6">
             <Reveal direction="left" className="grid gap-4 sm:grid-cols-2">
-              <Parallax className="aspect-3/4 rounded-2xl sm:mt-10" amount={6}>
+              <Parallax className="aspect-2/3 rounded-2xl sm:mt-10" amount={6}>
                 <Image
                   src={portraitOne.src}
                   alt=""
@@ -99,7 +99,7 @@ export function AboutView({ locale }: { locale: Locale }) {
                   className="object-cover"
                 />
               </Parallax>
-              <Parallax className="aspect-3/4 rounded-2xl" amount={9}>
+              <Parallax className="aspect-2/3 rounded-2xl" amount={9}>
                 <Image
                   src={portraitTwo.src}
                   alt=""
@@ -133,7 +133,7 @@ export function AboutView({ locale }: { locale: Locale }) {
           </div>
           <div className="lg:col-span-7">
             <Reveal direction="left">
-              <Parallax className="aspect-16/10 rounded-2xl" amount={7}>
+              <Parallax className="aspect-3/2 rounded-2xl" amount={7}>
                 <Image
                   src={courtyardLounge.src}
                   alt={courtyardLounge.alt[locale]}

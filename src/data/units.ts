@@ -22,12 +22,21 @@ export type Unit = {
   photos: readonly MediaImage[];
 };
 
-const cover = (name: UnitSlug) =>
-  media["units/cover"].find((i) => i.src.endsWith(`/${name}.jpg`))!;
-
-/** Pick a specific shot from a unit's own folder as its cover. */
-const coverFrom = (slug: UnitSlug, file: string) =>
+/** Pick a specific shot from a unit's own folder. */
+const shot = (slug: UnitSlug, file: string) =>
   media[`units/${slug}`].find((i) => i.src.endsWith(file))!;
+
+/**
+ * Folder order is alphabetical, which opened CITY on its hallway and TRAVEL on
+ * a dining table. Guests are picking where they will sleep, so the bed leads,
+ * the living areas follow and the bathroom closes. Anything not named here
+ * keeps its filename order at the end.
+ */
+const ordered = (slug: UnitSlug, files: string[]): readonly MediaImage[] => {
+  const lead = files.map((file) => shot(slug, file));
+  const rest = media[`units/${slug}`].filter((i) => !lead.includes(i));
+  return [...lead, ...rest];
+};
 
 export const units: Unit[] = [
   {
@@ -102,8 +111,18 @@ export const units: Unit[] = [
       "lavazza",
       "water",
     ],
-    cover: cover("city"),
-    photos: media["units/city"],
+    // The bed, not the brick wall — the room is what is being booked.
+    cover: shot("city", "img_5233.jpg"),
+    photos: ordered("city", [
+      "img_5233.jpg",
+      "img_5248.jpg",
+      "img_5228.jpg",
+      "img_5230.jpg",
+      "img_5231.jpg",
+      "img_4969.jpg",
+      "img_5237.jpg",
+      "img_5238.jpg",
+    ]),
   },
   {
     slug: "travel",
@@ -177,9 +196,17 @@ export const units: Unit[] = [
       "lavazza",
       "water",
     ],
-    // The stock cover is a bedroom, same as TANGO — the living room reads apart.
-    cover: coverFrom("travel", "img_5259.jpg"),
-    photos: media["units/travel"],
+    cover: shot("travel", "img_5261.jpg"),
+    photos: ordered("travel", [
+      "img_5261.jpg",
+      "img_5262.jpg",
+      "img_5265.jpg",
+      "img_5259.jpg",
+      "img_5255.jpg",
+      "img_5252.jpg",
+      "img_5267.jpg",
+      "img_5270.jpg",
+    ]),
   },
   {
     slug: "tango",
@@ -238,8 +265,18 @@ export const units: Unit[] = [
       "lavazza",
       "water",
     ],
-    cover: cover("tango"),
-    photos: media["units/tango"],
+    // Full-resolution frame of the same shot the old cover was cropped from.
+    cover: shot("tango", "img_5271.jpg"),
+    photos: ordered("tango", [
+      "img_5271.jpg",
+      "img_5275hdr.jpg",
+      "img_5278.jpg",
+      "img_5276.jpg",
+      "img_5282.jpg",
+      "img_5285.jpg",
+      "img_5287.jpg",
+      "img_5288.jpg",
+    ]),
   },
 ];
 

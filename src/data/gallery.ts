@@ -149,6 +149,8 @@ export const heroSlides: MediaImage[] = [
  * A handful of strong shots for the homepage gallery teaser. The first entry
  * is the featured tile — it runs two columns wide and two rows tall on
  * desktop, so the count here should stay at nine to fill the grid exactly.
+ * Landscape frames only: the tiles are 3:2, and the one portrait shot that
+ * used to be here lost its top and bottom to them.
  */
 export const galleryTeaser: GalleryItem[] = [
   pick("/media/gallery/img_5224.jpg"),
@@ -158,7 +160,7 @@ export const galleryTeaser: GalleryItem[] = [
   pick("/media/gallery/img_5261.jpg"),
   pick("/media/gallery/img_5253.jpg"),
   pick("/media/gallery/img_5271.jpg"),
-  pick("/media/gallery/img_5276.jpg"),
+  pick("/media/gallery/img_5228.jpg"),
   pick("/media/new/img_5056.jpg"),
 ];
 

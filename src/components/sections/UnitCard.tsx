@@ -32,7 +32,9 @@ export function UnitCard({
         className,
       )}
     >
-      <div className="relative aspect-4/3 overflow-hidden">
+      {/* 3:2 — the ratio every unit photo was shot at. A 4:3 window cost
+          each cover a strip off both sides for nothing. */}
+      <div className="relative aspect-3/2 overflow-hidden">
         <Image
           src={unit.cover.src}
           alt={`${unit.kind[locale]} ${unit.name}`}

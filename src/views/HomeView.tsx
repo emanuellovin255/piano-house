@@ -105,7 +105,7 @@ export function HomeView({ locale }: { locale: Locale }) {
 
           <div className="lg:col-span-5">
             <Reveal direction="left">
-              <Parallax className="aspect-3/4 rounded-2xl" amount={8}>
+              <Parallax className="aspect-3/2 rounded-2xl lg:aspect-3/4" amount={8}>
                 <Image
                   src={courtyardLounge.src}
                   alt={courtyardLounge.alt[locale]}
@@ -220,7 +220,7 @@ export function HomeView({ locale }: { locale: Locale }) {
               className={
                 i === 0
                   ? "col-span-2 aspect-3/2 md:row-span-2 md:aspect-auto"
-                  : "aspect-4/3"
+                  : "aspect-3/2"
               }
             >
               <Link

@@ -39,19 +39,31 @@ export function UnitDetailView({
 
   return (
     <>
-      {/* Masthead: cover image with the unit name over it */}
-      <section className="relative flex min-h-[70svh] items-end overflow-hidden pt-32 pb-14 md:min-h-[78svh] md:pb-20">
-        <Image
-          src={unit.cover.src}
-          alt={`${unit.kind[locale]} ${unit.name}`}
-          fill
-          priority
-          sizes="100vw"
-          placeholder="blur"
-          blurDataURL={unit.cover.blurDataURL}
-          className="object-cover"
+      {/* Masthead: the cover shown whole above the name on phones, the same
+          photo full-bleed behind it from md up. */}
+      <section className="relative overflow-hidden pt-24 pb-14 md:flex md:min-h-[78svh] md:items-end md:pt-32 md:pb-20">
+        <div
+          aria-hidden
+          style={{ backgroundImage: `url(${unit.cover.blurDataURL})` }}
+          className="absolute inset-0 scale-110 bg-cover bg-center opacity-35 md:hidden"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/65 to-ink/45" />
+        <div
+          aria-hidden
+          className="absolute inset-0 bg-gradient-to-t from-ink via-ink/80 to-ink/55 md:hidden"
+        />
+        <div className="relative mx-auto mb-8 aspect-3/2 w-[min(100%-1.5rem,60svh)] overflow-hidden rounded-2xl ring-1 ring-bone/15 md:absolute md:inset-0 md:m-0 md:aspect-auto md:w-auto md:rounded-none md:ring-0">
+          <Image
+            src={unit.cover.src}
+            alt={`${unit.kind[locale]} ${unit.name}`}
+            fill
+            priority
+            sizes="(min-width: 768px) 100vw, 96vw"
+            placeholder="blur"
+            blurDataURL={unit.cover.blurDataURL}
+            className="object-cover"
+          />
+        </div>
+        <div className="absolute inset-0 hidden bg-gradient-to-t from-ink via-ink/65 to-ink/45 md:block" />
 
         <div className="shell relative">
           <nav
