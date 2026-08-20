@@ -36,36 +36,23 @@ export function Hero({
     offset: ["start start", "end start"],
   });
 
-  // Deliberately a translation and not a scale. Scaling this layer meant Chrome
-  // re-rasterised a full-viewport photo on every scroll frame — on top of the
-  // Ken Burns animation already scaling the same image — which is what made the
-  // hero flicker. Translating composites the existing texture instead.
-  const mediaY = useTransform(
-    scrollYProgress,
-    [0, 1],
-    reduced ? ["0%", "0%"] : ["0%", "9%"],
-  );
+  // The photograph dims as the hero leaves, but the headline, the price and
+  // the two buttons hold at full strength the whole way out — fading the thing
+  // someone is reading, or about to tap, is the wrong trade.
   const mediaOpacity = useTransform(
     scrollYProgress,
     [0, 1],
-    reduced ? [1, 1] : [1, 0.3],
+    reduced ? [1, 1] : [1, 0.45],
   );
-  const copyY = useTransform(
-    scrollYProgress,
-    [0, 1],
-    reduced ? ["0%", "0%"] : ["0%", "38%"],
-  );
-  const copyOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
 
   return (
     <section
       ref={ref}
-      className="relative flex min-h-[100svh] flex-col justify-end overflow-hidden pt-20 pb-10 md:pt-28 md:pb-20"
+      className="relative flex flex-col overflow-hidden pt-20 pb-10 md:min-h-[100svh] md:justify-end md:pt-28 md:pb-20"
     >
-      {/* Phones only: the current frame's own blur placeholder, stretched to
-          fill. It is already inlined in the payload, so this tints the copy
-          area with the photograph for free rather than dropping it on flat
-          ink. */}
+      {/* Phones only: the first frame's blur placeholder, stretched to fill.
+          It is already inlined in the payload, so this tints the copy area
+          with the photograph for free rather than dropping it on flat ink. */}
       <div
         aria-hidden
         style={{ backgroundImage: `url(${slides[0].blurDataURL})` }}
@@ -80,16 +67,13 @@ export function Hero({
           never exposes an edge as the hero scrolls away. Phones: a framed card
           in the flow, above the copy. */}
       <motion.div
-        style={{ y: mediaY, opacity: mediaOpacity }}
-        className="relative z-10 mx-3 mb-7 transform-gpu will-change-[transform,opacity] md:absolute md:inset-x-0 md:-top-[10%] md:z-0 md:mx-0 md:mb-0 md:h-[120%]"
+        style={{ opacity: mediaOpacity }}
+        className="relative z-10 mx-3 mb-7 transform-gpu will-change-[opacity] md:absolute md:inset-0 md:z-0 md:mx-0 md:mb-0"
       >
         <HeroMedia slides={slides} />
       </motion.div>
 
-      <motion.div
-        style={{ y: copyY, opacity: copyOpacity }}
-        className="shell relative z-10"
-      >
+      <div className="shell relative z-10">
         <motion.p
           className="eyebrow flex items-center gap-3 text-magenta"
           initial={{ opacity: 0, y: 12 }}
@@ -175,7 +159,7 @@ export function Hero({
             {siteConfig.phones[0].display}
           </a>
         </motion.div>
-      </motion.div>
+      </div>
     </section>
   );
 }

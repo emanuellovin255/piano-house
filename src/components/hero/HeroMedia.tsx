@@ -15,11 +15,11 @@ type Mode = "unknown" | "video" | "slides";
  * stills with a slow Ken Burns drift instead. Both paths occupy exactly the
  * same box, so switching one on later changes nothing about the layout.
  *
- * Two shapes, one component. On desktop it is the full-bleed layer it always
- * was. On phones a landscape frame stretched over a 9:16 viewport showed
- * roughly a third of its width — a slice of brick wall where a living room was
- * meant to be — so it becomes a framed card in the page flow instead, shaped to
- * the photograph and showing all of it.
+ * Two shapes, one rule: the whole photograph, always. On phones it is a framed
+ * card in the page flow, shaped to the image. On desktop it still fills the
+ * section, but the frame is fitted inside it rather than cropped to it, over a
+ * wash made from the image's own blur placeholder — so a 3:2 photo on a 16:9
+ * screen keeps its edges instead of losing them off the sides.
  */
 export function HeroMedia({ slides }: { slides: MediaImage[] }) {
   const reduced = useReducedMotion();
@@ -100,7 +100,7 @@ export function HeroMedia({ slides }: { slides: MediaImage[] }) {
         <video
           ref={videoRef}
           key={mp4}
-          className="size-full object-cover"
+          className="size-full object-contain"
           autoPlay
           muted
           loop
@@ -124,6 +124,15 @@ export function HeroMedia({ slides }: { slides: MediaImage[] }) {
             exit={{ opacity: 0 }}
             transition={{ duration: 1.4, ease: "easeInOut" }}
           >
+            {/* Fills whatever the fitted photo leaves over, so the letterbox
+                on a wider screen reads as depth rather than as bars. */}
+            <div
+              aria-hidden
+              style={{
+                backgroundImage: `url(${slides[index].blurDataURL})`,
+              }}
+              className="absolute inset-0 scale-110 bg-cover bg-center opacity-55"
+            />
             <Image
               src={slides[index].src}
               alt=""
@@ -132,13 +141,10 @@ export function HeroMedia({ slides }: { slides: MediaImage[] }) {
               sizes="(min-width: 768px) 100vw, 96vw"
               placeholder="blur"
               blurDataURL={slides[index].blurDataURL}
-              // Ken Burns is desktop-only: zooming a framed photo would crop
-              // the very edges the frame exists to keep.
-              className={
-                reduced
-                  ? "object-cover"
-                  : "object-cover md:animate-(--animate-ken-burns) md:will-change-transform"
-              }
+              // Contain, not cover: cropping is what hid two thirds of these
+              // photographs. Ken Burns would crop the edges back off, so it
+              // goes with it.
+              className="object-contain"
             />
           </motion.div>
         </AnimatePresence>

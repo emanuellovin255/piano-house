@@ -39,13 +39,14 @@ export function UnitDetailView({
 
   return (
     <>
-      {/* Masthead: the cover shown whole above the name on phones, the same
-          photo full-bleed behind it from md up. */}
-      <section className="relative overflow-hidden pt-24 pb-14 md:flex md:min-h-[78svh] md:items-end md:pt-32 md:pb-20">
+      {/* Masthead: the cover shown whole, framed above the name on phones and
+          fitted into the section from md up. Cropping it to a full-bleed fill
+          left a corner of duvet where a bedroom was supposed to be. */}
+      <section className="relative overflow-hidden pt-24 pb-14 md:flex md:min-h-[86svh] md:items-end md:pt-32 md:pb-20">
         <div
           aria-hidden
           style={{ backgroundImage: `url(${unit.cover.blurDataURL})` }}
-          className="absolute inset-0 scale-110 bg-cover bg-center opacity-35 md:hidden"
+          className="absolute inset-0 scale-110 bg-cover bg-center opacity-35 md:opacity-55"
         />
         <div
           aria-hidden
@@ -60,7 +61,7 @@ export function UnitDetailView({
             sizes="(min-width: 768px) 100vw, 96vw"
             placeholder="blur"
             blurDataURL={unit.cover.blurDataURL}
-            className="object-cover"
+            className="object-contain"
           />
         </div>
         <div className="absolute inset-0 hidden bg-gradient-to-t from-ink via-ink/65 to-ink/45 md:block" />
